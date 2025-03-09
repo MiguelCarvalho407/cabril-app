@@ -1,0 +1,68 @@
+{% extends 'CABRIL_APP/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/CABRIL_APP/reservas_detalhes.css' %}">
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">
+        {{ training.get_tipo_display }} {{ training.get_dia_da_semana_display }}: {{ training.hora_inicio }} - {{ training.hora_fim }}
+    </h2>
+
+    {% if reservations %}
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nome</th>
+                        <th>Presente</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in reservations %}
+                        <tr>
+                            <td class="align-middle">{{ reservation.utilizador.username }}</td>
+                            
+                            <td class="align-middle">
+                                {% if reservation.confirmado %}
+                                    <span class="badge bg-success">✅</span>
+                                {% else %}
+                                    <span class="badge bg-danger">❌</span>
+                                {% endif %}
+                            </td>
+                            
+
+                            {% if request.user.is_staff %}
+                            <td class="align-middle">
+                                <form method="POST" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="reservation_id" value="{{ reservation.id }}">
+                                    <button type="submit" class="btn-confirmar {% if reservation.confirmado %}btn-cancelar{% else %}btn-primary{% endif %}">
+                                        {% if reservation.confirmado %}Cancelar{% else %}Confirmar{% endif %}
+                                    </button>
+                                </form>
+                            </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-warning text-center" role="alert">
+            Nenhum atleta marcou presença para este {{ training.get_tipo_display }}.
+        </div>
+    {% endif %}
+
+</div>
+
+{% if request.user.is_staff %}
+    <div class="container-adicionar-atleta">
+        <a href="{% url 'adicionar_utilizador' %}" class="btn-adicionar-atleta">Adicionar Atleta</a>
+    </div>
+{% endif %}
+
+
+{% endblock %}

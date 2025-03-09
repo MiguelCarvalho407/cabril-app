@@ -1,0 +1,47 @@
+{% extends 'CABRIL_APP/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/CABRIL_APP/criar_evento.css' %}">
+
+<div class="form-container">
+    <h2>Criar Evento</h2>
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.data_inicio.label_tag }}
+            {{ form.data_inicio }}
+        </div>
+
+        <div class="form-group">
+            {{ form.data_fim.label_tag }}
+            {{ form.data_fim }}
+        </div>
+
+        <div class="form-group">
+            {{ form.hora_inicio.label_tag }}
+            {{ form.hora_inicio }}
+        </div>
+
+        <div class="form-group">
+            {{ form.hora_fim.label_tag }}
+            {{ form.hora_fim }}
+        </div>
+
+        <div class="form-group">
+            {{ form.dia_da_semana.label_tag }}
+            {{ form.dia_da_semana }}
+        </div>
+
+        <div class="form-group">
+            {{ form.tipo.label_tag }}
+            {{ form.tipo }}
+        </div>
+
+        <button type="submit" class="btn-submit">Criar Evento</button>
+    </form>
+</div>
+
+{% endblock %}

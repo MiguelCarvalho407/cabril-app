@@ -1,0 +1,93 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins';
+}
+
+html,body{
+    height: 100%;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.logo{
+    height: 80px;
+    border-radius: 50%;
+}
+
+.main-registration{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+}
+
+.container-registration{
+    background-color: #eee;
+    border-radius: 14px;
+    max-width: 600px;
+    width: 90%;
+    box-sizing: 0 3px 5px rgba(0,0,0, 0.5);
+    overflow: hidden;
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+
+.header-registration{
+    background: rgb(42, 42, 138);
+    padding: 5px;
+    text-align: center;
+}
+
+.form{
+    padding: 18px;
+}
+
+.form-content{
+    padding-bottom: 18px;
+    position: relative;
+}
+
+.form-content label{
+    display: inline-block;
+    margin-bottom: 4px;
+}
+
+.form-content input{
+    display: block;
+    width: 100%;
+    border-radius: 8px;
+    padding: 8px;
+    border: 2px solid #dfdfdf;
+}
+
+.form .button{
+    background-color: rgb(42, 42, 138);
+    color: #fff;
+    width: 100%;
+    border-radius: 14px;
+    padding: 10px;
+    border: 0;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.btn-criar-conta {
+    background-color: #27ae60; /* Cor de fundo verde */
+    color: white; /* Cor do texto */
+    border: none; /* Remover borda */
+    padding: 12px 24px; /* Espaçamento interno */
+    font-size: 16px; /* Tamanho da fonte */
+    font-family: 'Poppins', sans-serif; /* Fonte Poppins */
+    border-radius: 8px; /* Bordas arredondadas */
+    cursor: pointer; /* Indica que é um botão clicável */
+    width: 100%; /* Botão ocupa 100% da largura disponível */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Efeitos suaves */
+}
+
+.entrar{
+    margin-left: 20px;
+    margin-bottom: 1rem;
+}

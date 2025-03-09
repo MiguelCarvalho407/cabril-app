@@ -1,0 +1,21 @@
+{% extends 'CABRIL_APP/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<ul>
+    {% for utilizador in utilizadores_sem_reserva %}
+        <li>
+            {{ utilizador.username }}
+            <form method="POST" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="utilizador_id" value="{{ utilizador.id }}">
+                <button type="submit">Adicionar ao Treino</button>
+            </form>
+        </li>
+    {% empty %}
+        <li>Não há utilizadores disponíveis para adicionar.</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

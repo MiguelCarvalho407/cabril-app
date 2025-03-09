@@ -1,0 +1,50 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="stylesheet" href="{% static 'css/CABRIL_APP/base.css' %}">
+    <link rel="shortcut icon" href="{% static 'imagens/cabril_favicon.png' %}" type="image/x-icon">
+    <title>CABRIL APP</title>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="{% static 'imagens/cabril_favicon.png' %}" class="logo-foto">
+        </div>
+
+        <div class="hamburguer">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+
+        <nav class="nav-bar">
+            <ul>
+                <li><a href="{% url 'calendario' %}">Calendário</a></li>
+                <li><a href="{% url 'pagsdesenvolvimento' %}">Gestão Carrinha</a></li>
+                <li><a href="{% url 'pagsdesenvolvimento' %}">Definições</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    {% block content %}
+        <div class="msg-bv">
+            <h2>Bem vindo, {{ user.username }}!</h2>
+        </div>
+    {% endblock %}
+
+    <script>
+        hamburguer = document.querySelector(".hamburguer");
+        hamburguer.onclick = function() {
+            navBar = document.querySelector(".nav-bar");
+            navBar.classList.toggle("active")
+        }
+    </script>
+
+</body>
+</html>

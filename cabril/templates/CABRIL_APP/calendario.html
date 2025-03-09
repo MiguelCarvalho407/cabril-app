@@ -1,0 +1,142 @@
+{% extends 'CABRIL_APP/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/CABRIL_APP/calendario.css' %}">
+
+<div class="calendar-container">
+    <div class="calendar-header">
+        <button id="prev">◀</button>
+        <h2 id="month-year"></h2>
+        <button id="next">▶</button>
+    </div>
+
+    {% if request.user.is_staff %}
+        <a href="{% url 'criarevento' %}" class="btn-criar-evento">Criar Evento</a>
+    {% endif %}
+
+    <div class="weekdays">
+        <div>SEG</div>
+        <div>TER</div>
+        <div>QUA</div>
+        <div>QUI</div>
+        <div>SEX</div>
+        <div>SÁB</div>
+        <div>DOM</div>
+    </div>
+    <div id="days" class="days-grid"></div>
+</div>
+
+<div id="event-details-modal" class="modal hidden">
+    <div class="modal-content">
+        <h2>Detalhes do Treino</h2>
+        <p><strong>Dia:</strong> <span id="details-date"></span></p>
+        <p><strong>Hora:</strong> <span id="details-time"></span></p>
+        <p><strong>Tipo:</strong> <span id="details-type"></span></p>
+
+        <div class="modal-buttons">
+            <a href="#" id="reserve-link" class="btn-reservar">Presente</a>
+            <a href="#" id="details-link" class="details-link">Detalhes</a>
+            {% if request.user.is_staff %}
+                <a href="#" id="cancelar-link" class="btn-cancelar">Cancelar</a>
+            {% endif %}
+            <button id="close-popup-btn" class="close-popup-btn">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const daysContainer = document.getElementById("days");
+    const monthYearHeader = document.getElementById("month-year");
+    const prevButton = document.getElementById("prev");
+    const nextButton = document.getElementById("next");
+    const detailsModal = document.getElementById("event-details-modal");
+    const detailsDate = document.getElementById("details-date");
+    const detailsTime = document.getElementById("details-time");
+    const detailsType = document.getElementById("details-type");
+    const closePopupBtn = document.getElementById("close-popup-btn");
+    const reserveLink = document.getElementById("reserve-link");
+    const cancelarLink = document.getElementById("cancelar-link");
+
+    let currentDate = new Date();
+    const treinos = JSON.parse('{{ treinos_json|escapejs }}');
+
+    function renderCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const firstDayOfMonth = new Date(year, month, 1).getDay();
+        const lastDateOfMonth = new Date(year, month + 1, 0).getDate();
+
+        monthYearHeader.textContent = currentDate.toLocaleDateString("pt-BR", { month: "long", year: "numeric" });
+        daysContainer.innerHTML = "";
+
+        for (let i = 0; i < (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1); i++) {
+            daysContainer.innerHTML += `<div class="day empty"></div>`;
+        }
+
+        for (let day = 1; day <= lastDateOfMonth; day++) {
+            const dateKey = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+            const today = new Date().toDateString() === new Date(year, month, day).toDateString();
+            const dayElement = document.createElement("div");
+            dayElement.classList.add("day");
+            if (today) dayElement.classList.add("today");
+            dayElement.innerHTML = `<span>${day}</span>`;
+
+            treinos.forEach((treino) => {
+                if (treino.data === dateKey) {
+                    const treinoDiv = document.createElement("div");
+                    treinoDiv.classList.add("event", "treino-event");
+                    treinoDiv.textContent = `${treino.hora_inicio} - ${treino.hora_fim} - ${treino.tipo}`;
+                    
+                    treinoDiv.addEventListener("click", () => {
+                        showEventDetails(treino, dateKey);
+                    });
+
+                    dayElement.appendChild(treinoDiv);
+                }
+            });
+
+            daysContainer.appendChild(dayElement);
+        }
+    }
+
+    function showEventDetails(treino, dateKey) {
+        detailsDate.textContent = new Date(dateKey).toLocaleDateString("pt-BR");
+        detailsTime.textContent = `${treino.hora_inicio} - ${treino.hora_fim}`;
+        detailsType.textContent = treino.tipo;
+
+        reserveLink.href = `/reservas/${treino.id}/`;
+        reserveLink.textContent = treino.reservado ? "Cancelar Presença" : "Presente";
+        reserveLink.classList.toggle("cancelar", treino.reservado);
+
+        const detailsLink = document.getElementById("details-link");
+        detailsLink.href = `/treinodetalhes/${treino.id}/`;
+
+        if (cancelarLink) {
+            cancelarLink.href = `/cancelarevento/${treino.id}/`;
+        }
+        
+        detailsModal.classList.remove("hidden");
+    }
+
+    closePopupBtn.addEventListener("click", () => {
+        detailsModal.classList.add("hidden");
+    });
+
+    prevButton.addEventListener("click", () => {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        renderCalendar();
+    });
+
+    nextButton.addEventListener("click", () => {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        renderCalendar();
+    });
+
+    renderCalendar();
+});
+</script>
+
+{% endblock %}
