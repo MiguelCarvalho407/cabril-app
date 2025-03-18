@@ -63,7 +63,7 @@ nav ul li a {
     .hamburguer{
         display: block;
         cursor: pointer;
-        margin-left: 80%;
+        margin-left: 70%;
     }
 
     .hamburguer .line{

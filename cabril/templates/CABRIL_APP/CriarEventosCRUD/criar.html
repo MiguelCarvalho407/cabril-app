@@ -11,6 +11,11 @@
         {% csrf_token %}
 
         <div class="form-group">
+            {{ form.descricao.label_tag }}
+            {{ form.descricao }}
+        </div>
+
+        <div class="form-group">
             {{ form.data_inicio.label_tag }}
             {{ form.data_inicio }}
         </div>

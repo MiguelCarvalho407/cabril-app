@@ -30,7 +30,9 @@
 
 <div id="event-details-modal" class="modal hidden">
     <div class="modal-content">
-        <h2>Detalhes do Treino</h2>
+        <!-- <h2>Detalhes do Evento</h2> -->
+        <h3> <span id="evento-descricao"></span> </h3>
+        <p><strong>Dia da Semana:</strong> <span id="dia-semana"></span></p>
         <p><strong>Dia:</strong> <span id="details-date"></span></p>
         <p><strong>Hora:</strong> <span id="details-time"></span></p>
         <p><strong>Tipo:</strong> <span id="details-type"></span></p>
@@ -55,6 +57,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const detailsModal = document.getElementById("event-details-modal");
     const detailsDate = document.getElementById("details-date");
     const detailsTime = document.getElementById("details-time");
+    const diaSemana = document.getElementById("dia-semana");
+    const descricao = document.getElementById("evento-descricao");
     const detailsType = document.getElementById("details-type");
     const closePopupBtn = document.getElementById("close-popup-btn");
     const reserveLink = document.getElementById("reserve-link");
@@ -105,10 +109,12 @@ document.addEventListener("DOMContentLoaded", function () {
     function showEventDetails(treino, dateKey) {
         detailsDate.textContent = new Date(dateKey).toLocaleDateString("pt-BR");
         detailsTime.textContent = `${treino.hora_inicio} - ${treino.hora_fim}`;
+        diaSemana.textContent = `${treino.dia_da_semana}`;
+        descricao.textContent = treino.descricao ? `${treino.descricao}` : "Detalhes do Evento";
         detailsType.textContent = treino.tipo;
 
         reserveLink.href = `/reservas/${treino.id}/`;
-        reserveLink.textContent = treino.reservado ? "Cancelar Presença" : "Presente";
+        reserveLink.textContent = treino.reservado ? "Ausente" : "Presente";
         reserveLink.classList.toggle("cancelar", treino.reservado);
 
         const detailsLink = document.getElementById("details-link");

@@ -157,14 +157,18 @@ body {
 .modal-content strong {
   color: #c0c0c0;
 }
+
 .close-popup-btn {
-  margin-top: 15px;
-  padding: 10px 20px;
+  display: inline-block;
+  padding: 7px;
   background-color: #6c757d;
-  color: #fff;
-  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 16px;
+  width: 100%;
+  margin-top: 5%;
   cursor: pointer;
 }
   
@@ -213,13 +217,20 @@ body {
   display: inline-block;
   padding: 7px;
   background-color: #ffc107;
-  color: black;
+  color: white;
   text-align: center;
   text-decoration: none;
   border-radius: 5px;
   font-size: 16px;
   width: 100%;
   margin-top: 5%;
+  height: 66%;
+}
+
+#evento-descricao{
+  display: flex;
+  justify-content: center;
+  font-weight: 600;
 }
 
 
@@ -231,12 +242,26 @@ body {
 }
 
 
+@media (max-width: 1920px) {
+  .calendar-container{
+    width: 80%;
+  }
+}
+
 
  @media (max-width: 768px) {
+  .calendar-container {
+    width: 90%;
+  }
+
   .days-grid{
     display: grid;
     gap: 5px;
     grid-template: none; /* FAZ COM QUE OS DIAS APAREÇAM SEGUIDOS E NÃO DE 7 EM 7 */
+  }
+
+  .btn-criar-evento{
+    width: 50%;
   }
 }
 

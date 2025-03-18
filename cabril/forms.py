@@ -93,6 +93,8 @@ class LoginForm(forms.Form):
 
 
 class CriarTreinoForm(forms.Form):
+    descricao = forms.CharField(widget=forms.TextInput(), required=False)
+
     data_inicio = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
 
     data_fim = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
@@ -126,7 +128,9 @@ class ReservasForm(forms.ModelForm):
 
 
 class GestaoCarrinhaForm(forms.ModelForm):
+    quilometros_chegada = forms.DecimalField(required=False)
+
     class Meta:
         model = GestaoCarrinha
-        fields = ['torneio', 'localizacao', 'ocupante1', 'ocupante2', 'ocupante3', 'ocupante4', 'ocupante5',
+        fields = ['torneio', 'ocupante1', 'ocupante2', 'ocupante3', 'ocupante4', 'ocupante5',
                   'ocupante6', 'ocupante7', 'ocupante8', 'condutor', 'quilometros_saida', 'quilometros_chegada']    

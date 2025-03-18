@@ -66,26 +66,6 @@ def logout_view(request):
 
 
 
-
-
-# ================ SITE CABRIL ================== #
-
-
-# def base(request):
-#     return render(request, 'CABRIL_SITE/base.html')
-
-
-# def socios(request):
-#     return render(request, 'CABRIL_SITE/socios.html')
-
-# ========== ======================== =========== #
-
-
-
-
-
-
-
 # ================= APPS CABRIL ================= #
 
 
@@ -112,6 +92,8 @@ def calendario(request):
             "hora_inicio": treino.hora_inicio.strftime("%H:%M"),
             "hora_fim": treino.hora_fim.strftime("%H:%M"),
             "tipo": treino.get_tipo_display(),
+            "descricao": treino.descricao,
+            "dia_da_semana": treino.get_dia_da_semana_display(),
             "reservado": Reservas.objects.filter(utilizador=request.user, treino=treino).exists(),
         }
         for treino in treinos
@@ -124,17 +106,25 @@ def calendario(request):
 @login_required
 def reservas(request, training_id):
     training = get_object_or_404(Treinos, id=training_id)
-    
-    # Verifica se o usuário já fez a reserva para este treino
-    reservation = Reservas.objects.filter(utilizador=request.user, treino=training).first()
-    
-    if reservation:
-        # Se a reserva existe, o usuário pode desreservar
-        reservation.delete()
+
+    treino_datetime = datetime.combine(training.data_inicio, training.hora_inicio)
+    treino_datetime = timezone.make_aware(treino_datetime, timezone.get_current_timezone())
+
+
+    # VER SE O TREINO JÁ PASSOU
+    if timezone.now() >= treino_datetime:
         return redirect('calendario')
 
-    # Cria a reserva para o usuário
-    Reservas.objects.create(utilizador=request.user, treino=training)
+    # VER SE O UTILIZADOR JÁ TEM RESERVA
+    reservation = Reservas.objects.filter(utilizador=request.user, treino=training).first()
+    
+    # SE TIVER RESERVA PODE CANCELAR
+    if reservation:
+        reservation.delete()
+
+    else:
+        # SENÃO MARCA
+        Reservas.objects.create(utilizador=request.user, treino=training)
     return redirect('calendario')
 
 
@@ -159,27 +149,28 @@ def reservas_detalhes(request, training_id):
 
 
 @login_required
-def adicionar_utilizador(request):
-
-    treino_atual = Treinos.objects.first()
-
-
-    utilizadores_sem_reserva = Utilizadores.objects.exclude(id__in=Reservas.objects.filter(treino=treino_atual).values('utilizador_id'))
-
+def adicionar_utilizador(request, treino_id):
+    treino = get_object_or_404(Treinos, id=treino_id)
 
     if request.method == "POST":
-
         utilizador_id = request.POST.get('utilizador_id')
-        utilizador = Utilizadores.objects.get(id=utilizador_id)
-        
-        Reservas.objects.create(treino=treino_atual, utilizador=utilizador)
-        
-        return redirect('adicionar_utilizador')
+        utilizador = get_object_or_404(Utilizadores, id=utilizador_id)
 
-    return render(request, 'CABRIL_APP/adicionar_utilizador.html', {
-        'utilizadores_sem_reserva': utilizadores_sem_reserva,
-        'treino_atual': treino_atual,
-    })
+        # Criar uma reserva para o utilizador, marcando como ausente
+        Reservas.objects.get_or_create(
+            treino=treino, 
+            utilizador=utilizador, 
+            defaults={'confirmado': False}  # Aqui dizemos que não confirmou presença
+        )
+
+        return redirect('adicionar_utilizador', treino_id=treino.id)
+
+    # Pega os utilizadores que **ainda não têm reserva** para este treino
+    utilizadores_sem_reserva = Utilizadores.objects.exclude(
+        id__in=Reservas.objects.filter(treino=treino).values_list('utilizador_id', flat=True)
+    )
+
+    return render(request, 'CABRIL_APP/adicionar_utilizador.html', {'utilizadores_sem_reserva': utilizadores_sem_reserva, 'treino': treino})
 
 
 
@@ -212,8 +203,9 @@ def criarevento(request):
             data_fim = form.cleaned_data['data_fim']
             hora_inicio = form.cleaned_data['hora_inicio']
             hora_fim = form.cleaned_data['hora_fim']
-            dias_da_semana = form.cleaned_data['dia_da_semana']  # Lista com os dias selecionados
+            dias_da_semana = form.cleaned_data['dia_da_semana']
             tipo = form.cleaned_data['tipo']
+            descricao = form.cleaned_data['descricao']
         
             dia_semana_map = {
                 'segunda-feira': 0,
@@ -238,6 +230,7 @@ def criarevento(request):
                                 hora_fim=hora_fim,
                                 dia_da_semana=dia_da_semana ,
                                 tipo = tipo,
+                                descricao=descricao,
                             )
 
                 current_date += timedelta(days=1)

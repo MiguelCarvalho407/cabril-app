@@ -3,9 +3,76 @@
 
 {% block content %}
 
-    <form method="post">
+<link rel="stylesheet" href="{% static 'css/CABRIL_APP/gestao_carrinha.css' %}">
+
+    <form method="post" class="teste">
         {% csrf_token %}
-        {{ form.as_p }}
+
+        <div class="form-group">
+            {{ form.torneio.label_tag }}
+            {{ form.torneio }}
+        </div>
+
+        <div class="form-group">
+            {{ form.condutor.label_tag }}
+            {{ form.condutor }}
+        </div>
+
+        <div class="form-group">
+            <label for="">Ocupante 1:</label>
+            {{ form.ocupante1 }}
+        </div>
+
+        <div class="form-group">
+            <label for="">Ocupante 2:</label>
+            {{ form.ocupante2 }}
+        </div>
+
+        <div class="form-group">
+            <label for="">Ocupante 3:</label>
+            {{ form.ocupante3 }}
+        </div>
+
+        <div class="form-group">
+            <label for="">Ocupante 4:</label>
+            {{ form.ocupante4 }}
+        </div>
+
+        <div class="form-group">
+            <label for="">Ocupante 5:</label>
+            {{ form.ocupante5 }}
+        </div>
+
+        <div class="form-group">
+            <label for="">Ocupante 6:</label>
+            {{ form.ocupante6 }}
+        </div>
+
+        <div class="form-group">
+            <label for="">Ocupante 7:</label>
+            {{ form.ocupante7 }}
+        </div>
+
+        <div class="form-group">
+            <label for="">Ocupante 8:</label>
+            {{ form.ocupante8 }}
+        </div>
+
+        <div class="form-group">
+            <label for="">Ocupante 9:</label>
+            {{ form.ocupante9 }}
+        </div>
+
+        <div class="form-group">
+            <label for="">Quilómetros à Saída:</label>
+            {{ form.quilometros_saida }}
+        </div>
+
+        <div class="form-group">
+            <label for="">Quilómetros à Chegada:</label>
+            {{ form.quilometros_chegada }}
+        </div>
+
         <button type="submit">Preencher</button>
     </form>
 

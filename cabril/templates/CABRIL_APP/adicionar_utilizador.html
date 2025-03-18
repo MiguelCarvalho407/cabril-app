@@ -3,19 +3,97 @@
 
 {% block content %}
 
-<ul>
-    {% for utilizador in utilizadores_sem_reserva %}
-        <li>
-            {{ utilizador.username }}
-            <form method="POST" style="display:inline;">
-                {% csrf_token %}
-                <input type="hidden" name="utilizador_id" value="{{ utilizador.id }}">
-                <button type="submit">Adicionar ao Treino</button>
-            </form>
-        </li>
-    {% empty %}
-        <li>Não há utilizadores disponíveis para adicionar.</li>
-    {% endfor %}
-</ul>
+<link rel="stylesheet" href="{% static 'CABRIL_APP/adicionar_utilizador.css' %}">
+
+<div class="container">
+    <h2>Adicionar Atletas</h2>
+
+    {% if utilizadores_sem_reserva %}
+        <ul class="user-list">
+            {% for utilizador in utilizadores_sem_reserva %}
+                <li class="user-item">
+                    <span>{{ utilizador.username }}</span>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="utilizador_id" value="{{ utilizador.id }}">
+                        <button type="submit" class="btn">Adicionar ao Treino</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-users">Não há utilizadores disponíveis para adicionar.</p>
+    {% endif %}
+
+    <a href="{% url 'reservas_detalhes' treino.id %}" class="btn-voltar">Voltar</a>
+
+</div>
+
+<style>
+    /* Estilização Geral */
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Lista de Utilizadores */
+.user-list {
+    list-style: none;
+    padding: 0;
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.user-item span {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+
+.btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-voltar{
+    display: flex;
+    margin-top: 5%;
+    background-color: #333;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    justify-content: center;
+    cursor: pointer;
+}
+
+</style>
 
 {% endblock %}

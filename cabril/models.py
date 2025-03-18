@@ -60,6 +60,7 @@ class Treinos(models.Model):
         ('torneio', 'Torneio'),
     ]
 
+    descricao = models.CharField(max_length=255, null=True, blank=True, default='None')
     data_inicio = models.DateField()
     data_fim = models.DateField()
     hora_inicio = models.TimeField()
@@ -67,11 +68,15 @@ class Treinos(models.Model):
     dia_da_semana = models.CharField(max_length=20, choices=DIAS_SEMANA_CHOICES)
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES, default='Treino')
 
+    def __str__(self):
+        return f'{self.descricao}'
+
 
 class Reservas(models.Model):
     utilizador = models.ForeignKey(Utilizadores, on_delete=models.CASCADE)
     treino = models.ForeignKey(Treinos, on_delete=models.CASCADE)
     confirmado = models.BooleanField(default=False)
+
 
     def __str__(self):
         return f"{self.utilizador.username} - {self.treino.data_inicio}"
@@ -80,8 +85,7 @@ class Reservas(models.Model):
 
 
 class GestaoCarrinha(models.Model):
-    torneio = models.CharField(max_length=255, null=False, blank=False)
-    localizacao = models.CharField(max_length=100, null=False, blank=False)
+    torneio = models.ForeignKey(Treinos, on_delete=models.CASCADE, limit_choices_to={'tipo': 'torneio'})
     ocupante1 = models.CharField(max_length=100, null=True, blank=True)
     ocupante2 = models.CharField(max_length=100, null=True, blank=True)
     ocupante3 = models.CharField(max_length=100, null=True, blank=True)
@@ -90,7 +94,10 @@ class GestaoCarrinha(models.Model):
     ocupante6 = models.CharField(max_length=100, null=True, blank=True)
     ocupante7 = models.CharField(max_length=100, null=True, blank=True)
     ocupante8 = models.CharField(max_length=100, null=True, blank=True)
-    condutor = models.CharField(max_length=100, null=False, blank=False)
-    quilometros_saida = models.FloatField(null=False, blank=False)
-    quilometros_chegada = models.FloatField(null=False, blank=False)
+    condutor = models.ForeignKey(Utilizadores, on_delete=models.CASCADE)
+    quilometros_saida = models.DecimalField(max_digits=6, decimal_places=3)
+    quilometros_chegada = models.DecimalField(max_digits=6, decimal_places=3, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.torneio}'
 
