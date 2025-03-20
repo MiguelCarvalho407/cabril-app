@@ -23,6 +23,7 @@ urlpatterns = [
     path('treinodetalhes/<int:training_id>/', views.reservas_detalhes, name='reservas_detalhes'),
     path('reservas/<int:training_id>/', views.reservas, name='reservas'),
     path('adicionarutilizador/<int:treino_id>/', views.adicionar_utilizador, name='adicionar_utilizador'),
+    path('removerutilizador/<int:treino_id>/<int:user_id>/', views.remover_presenca, name='remover_presenca'),
 
 
     path('desenvolvimento/', views.pagsdesenvolvimento, name='pagsdesenvolvimento'),

@@ -15,17 +15,23 @@
             <table class="table table-bordered table-hover text-center">
                 <thead class="table-dark">
                     <tr>
+                        <th>Foto</th>
                         <th>Nome</th>
-                        <th>Presente</th>
-                        <th></th>
+                        <th class="presente-desaparecer">Presente</th>
+                        {% if request.user.is_staff %}
+                            <th></th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
                     {% for reservation in reservations %}
                         <tr>
+                            <td class="align-middle">
+                                <img src="{{ reservation.utilizador.foto_perfil.url }}" class="foto-perfil">
+                            </td>
                             <td class="align-middle">{{ reservation.utilizador.username }}</td>
                             
-                            <td class="align-middle">
+                            <td class="align-middle botoes-success-danger">
                                 {% if reservation.confirmado %}
                                     <span class="badge bg-success">✅</span>
                                 {% else %}
@@ -43,6 +49,7 @@
                                         {% if reservation.confirmado %}Cancelar{% else %}Confirmar{% endif %}
                                     </button>
                                 </form>
+                                <a href="{% url 'remover_presenca' training.id reservation.utilizador.id %}" class="remover-presenca">Remover</a>
                             </td>
                             {% endif %}
                         </tr>
@@ -63,6 +70,7 @@
         <a href="{% url 'adicionar_utilizador' training.id %}" class="btn-adicionar-atleta">Adicionar Atleta</a>
     </div>
 {% endif %}
+
 
 
 {% endblock %}

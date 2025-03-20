@@ -5,6 +5,7 @@ from django.utils import timezone
 from datetime import timedelta, datetime
 from .forms import *
 import json
+from django.contrib import messages
 
 
 
@@ -149,7 +150,25 @@ def reservas_detalhes(request, training_id):
 
 
 @login_required
+def remover_presenca(request, treino_id, user_id):
+    if not request.user.is_staff:
+        return render(request, 'CABRIL_APP/ERRORS/403.html')
+    
+    treino = get_object_or_404(Treinos, id=treino_id)
+    reserva = Reservas.objects.filter(utilizador_id=user_id, treino=treino).first()
+
+    if reserva:
+        reserva.delete()
+
+    return redirect('reservas_detalhes', training_id=treino.id)
+
+
+
+@login_required
 def adicionar_utilizador(request, treino_id):
+    if not request.user.is_staff:
+        return render(request, 'CABRIL_APP/ERRORS/403.html')
+    
     treino = get_object_or_404(Treinos, id=treino_id)
 
     if request.method == "POST":
@@ -176,6 +195,9 @@ def adicionar_utilizador(request, treino_id):
 
 @login_required
 def cancelar_evento(request, treino_id):
+    if not request.user.is_staff:
+        return render(request, 'CABRIL_APP/ERRORS/403.html')
+    
     treino = get_object_or_404(Treinos, id=treino_id)
 
     if request.user.is_staff:
@@ -190,12 +212,26 @@ def cancelar_evento(request, treino_id):
 
 @login_required
 def definicoes(request):
-    return render(request, 'CABRIL_APP/definicoes.html')
+    if request.method == 'POST':
+        form = DefinicoesForm(request.POST, request.FILES, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Alterações guardadas com sucesso!')
+            return redirect('definicoes')
+        
+    else:
+        form = DefinicoesForm(instance=request.user)
+
+    return render(request, 'CABRIL_APP/definicoes.html', {'form': form})
 
 
 
 @login_required
 def criarevento(request):
+    if not request.user.is_staff:
+        return render(request, 'CABRIL_APP/ERRORS/403.html')
+    
     if request.method == 'POST':
         form = CriarTreinoForm(request.POST)
         if form.is_valid():

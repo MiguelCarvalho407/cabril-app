@@ -1,4 +1,3 @@
-/* Estilização Geral */
 .container {
     max-width: 600px;
     margin: 40px auto;
@@ -37,9 +36,9 @@ h2 {
     font-weight: 500;
 }
 
-/* Botão */
+
 .btn {
-    background: #4CAF50;
+    background: #007bff;
     color: white;
     border: none;
     padding: 6px 12px;
@@ -48,12 +47,16 @@ h2 {
     transition: 0.3s;
 }
 
-.btn:hover {
-    background: #45a049;
-}
-
-/* Mensagem de Nenhum Utilizador */
-.no-users {
-    color: #888;
+.btn-voltar{
+    display: flex;
+    margin-top: 5%;
+    background-color: #333;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
     font-size: 16px;
+    justify-content: center;
+    cursor: pointer;
 }

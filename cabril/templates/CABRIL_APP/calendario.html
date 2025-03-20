@@ -92,6 +92,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (treino.data === dateKey) {
                     const treinoDiv = document.createElement("div");
                     treinoDiv.classList.add("event", "treino-event");
+
+                    // QUANDO METE PRESENÇA NO TREINO MUDA A COR DE FUNDO
+                    if (treino.reservado) {
+                        treinoDiv.classList.add("treino-presente")
+                    }
+                    // ---------------------------------------------- //
+
                     treinoDiv.textContent = `${treino.hora_inicio} - ${treino.hora_fim} - ${treino.tipo}`;
                     
                     treinoDiv.addEventListener("click", () => {

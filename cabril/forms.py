@@ -70,7 +70,7 @@ class CriarContaForm(forms.Form):
         if confirmar_password != password:
             self.add_error('confirmar_password', 'As passwords não correspondem')
 
-        if chave != '123':
+        if chave != 'Cabril-Serpins_2025!':
             self.add_error('chave', 'Chave Incorreta.')
 
         return cleaned_data
@@ -122,6 +122,28 @@ class ReservasForm(forms.ModelForm):
 
 # ========== ================ ========== #
 
+
+# =========== OUTRAS PÁGINAS =========== #
+
+
+
+class DefinicoesForm(forms.ModelForm):
+    class Meta:
+        model = Utilizadores
+        fields = ['username', 'email', 'data_nascimento', 'classe', 'foto_perfil']
+
+        widgets = {
+            'email': forms.EmailInput(attrs={
+                'readonly': 'readonly'
+            }),
+            'data_nascimento': forms.DateInput(attrs={
+                'class': 'form-control',
+                'type': 'date'
+            }),
+            'classe': forms.TextInput(attrs={
+                'readonly': 'readonly'
+            })
+        }
 
 
 

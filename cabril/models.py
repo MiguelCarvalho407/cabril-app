@@ -18,6 +18,7 @@ class Utilizadores(AbstractUser):
     email = models.EmailField(unique=True)
     data_nascimento = models.DateField(null=False, blank=False)
     classe = models.CharField(max_length=50, choices=CLASSE_CHOICES, null=True, blank=True)
+    foto_perfil = models.ImageField(upload_to='fotos_perfil/', default='fotos_perfil/default.png')
 
 
     groups = models.ManyToManyField(

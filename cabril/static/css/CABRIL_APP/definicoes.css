@@ -1,0 +1,99 @@
+.profile-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.profile-header img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;  /* Mantém a qualidade e evita distorções */
+    border: 4px solid #ddd;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.profile-header img:hover {
+    transform: scale(1.05);
+}
+
+.profile-header h3 {
+    margin: 10px 0 5px;
+    color: #333;
+}
+
+.profile-header p {
+    color: #666;
+    font-size: 14px;
+}
+
+.form-content {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-content label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.form-content input,
+.form-content button {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    width: 100%;
+}
+
+.form-content input[type="file"] {
+    border: none;
+}
+
+.form-content button {
+    background: #007bff;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
+.alert{
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    font-weight: bold;
+}
+
+.form-content-imagem{
+    visibility: hidden; /* PARA NÃO APARECER A "Seleciona um Ficheiro" NA PARTE DE ESCOLHER A FOTO DE PERFIL */
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .profile-container {
+        width: 90%;
+    }
+}

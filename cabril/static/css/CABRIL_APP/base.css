@@ -41,6 +41,8 @@ nav ul li a {
     color: #fff;
     font-size: 20px;
     padding: 10px 15px;
+    display: flex;
+    justify-content: center;
 }
 
 .msg-bv{
@@ -56,6 +58,10 @@ nav ul li a {
 }
 
 @media screen and (max-width: 768px) {
+    .msg-bv{
+        text-align: center;
+    }
+
     .logo .logo-foto{
         height: 60px;
     }
@@ -74,8 +80,8 @@ nav ul li a {
     }
 
     .nav-bar.active{
-        height: 450px;
-        /* height: 100%; */
+        margin-top: -10px;
+        height: 100%;
     }
 
     .nav-bar{
