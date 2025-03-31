@@ -237,6 +237,23 @@ body {
   font-weight: 600;
 }
 
+#today-btn{
+  background-color: rgba(141, 101, 27, 0.308);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 15%;
+  text-decoration: none;
+  text-align: center;
+  font-size: 16px;
+}
+
 
 .modal-buttons {
   display: grid;
@@ -254,6 +271,10 @@ body {
 
 
  @media (max-width: 768px) {
+  #today-btn{
+    width: 50%;
+  }
+
   .calendar-container {
     width: 90%;
   }

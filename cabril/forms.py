@@ -70,7 +70,7 @@ class CriarContaForm(forms.Form):
         if confirmar_password != password:
             self.add_error('confirmar_password', 'As passwords não correspondem')
 
-        if chave != 'Cabril-Serpins_2025!':
+        if chave != '123':
             self.add_error('chave', 'Chave Incorreta.')
 
         return cleaned_data
@@ -150,9 +150,114 @@ class DefinicoesForm(forms.ModelForm):
 
 
 class GestaoCarrinhaForm(forms.ModelForm):
-    quilometros_chegada = forms.DecimalField(required=False)
+    torneio_nome = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Nome do Torneio'
+        })
+    )
+
+    data_inicio = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={
+            'type': 'date'
+        })
+    )
+
+    data_fim = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={
+            'type': 'date'
+        })
+    )
+    
+    condutor = forms.ModelChoiceField(
+        queryset=Utilizadores.objects.all(),
+        empty_label="Seleciona um Condutor",
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+    
+    ocupante1 = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ocupante 1'
+        })
+    )
+    
+    ocupante2 = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ocupante 2'
+        })
+    )
+    
+    ocupante3 = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ocupante 3'
+        })
+    )
+    
+    ocupante4 = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ocupante 4'
+        })
+    )
+    
+    ocupante5 = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ocupante 5'
+        })
+    )
+    
+    ocupante6 = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ocupante 6'
+        })
+    )
+    
+    ocupante7 = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ocupante 7'
+        })
+    )
+    
+    ocupante8 = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Ocupante 8'
+        })
+    )
+    
+    
+    
+    quilometros_saida = forms.DecimalField(
+        required=True, 
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control', 'placeholder': 'Quilómetros à Saída'
+        })
+    )
+    quilometros_chegada = forms.DecimalField(
+        required=False, 
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control', 'placeholder': 'Quilómetros à Chegada'
+        })
+    )
 
     class Meta:
         model = GestaoCarrinha
-        fields = ['torneio', 'ocupante1', 'ocupante2', 'ocupante3', 'ocupante4', 'ocupante5',
+        fields = ['data_inicio', 'data_fim', 'torneio_nome', 'ocupante1', 'ocupante2', 'ocupante3', 'ocupante4', 'ocupante5',
                   'ocupante6', 'ocupante7', 'ocupante8', 'condutor', 'quilometros_saida', 'quilometros_chegada']    

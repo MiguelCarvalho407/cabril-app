@@ -15,6 +15,7 @@
     {% if request.user.is_staff %}
         <a href="{% url 'criarevento' %}" class="btn-criar-evento">Criar Evento</a>
     {% endif %}
+    <button id="today-btn">Dia Atual</button>
 
     <div class="weekdays">
         <div>SEG</div>
@@ -139,14 +140,21 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     prevButton.addEventListener("click", () => {
-        currentDate.setMonth(currentDate.getMonth() - 1);
+        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1);
+        renderCalendar();
+    });
+    
+    nextButton.addEventListener("click", () => {
+        currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
         renderCalendar();
     });
 
-    nextButton.addEventListener("click", () => {
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        renderCalendar();
-    });
+    document.getElementById("today-btn").addEventListener("click", () => {
+        const todayElement = document.querySelector(".day.today");
+        if (todayElement) {
+            todayElement.scrollIntoView({ behavior: "smooth", block: "center"})
+        }
+    })
 
     renderCalendar();
 });

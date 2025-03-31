@@ -18,7 +18,7 @@ class Utilizadores(AbstractUser):
     email = models.EmailField(unique=True)
     data_nascimento = models.DateField(null=False, blank=False)
     classe = models.CharField(max_length=50, choices=CLASSE_CHOICES, null=True, blank=True)
-    foto_perfil = models.ImageField(upload_to='fotos_perfil/', default='fotos_perfil/default.png')
+    foto_perfil = models.ImageField(upload_to='fotos_perfil/', default='fotos_perfil/default.png', null=True, blank=True)
 
 
     groups = models.ManyToManyField(
@@ -86,7 +86,9 @@ class Reservas(models.Model):
 
 
 class GestaoCarrinha(models.Model):
-    torneio = models.ForeignKey(Treinos, on_delete=models.CASCADE, limit_choices_to={'tipo': 'torneio'})
+    torneio_nome = models.CharField(max_length=255, null=True, blank=True)
+    data_inicio = models.DateField(null=True, blank=True)
+    data_fim = models.DateField(null=True, blank=True)
     ocupante1 = models.CharField(max_length=100, null=True, blank=True)
     ocupante2 = models.CharField(max_length=100, null=True, blank=True)
     ocupante3 = models.CharField(max_length=100, null=True, blank=True)
@@ -100,5 +102,5 @@ class GestaoCarrinha(models.Model):
     quilometros_chegada = models.DecimalField(max_digits=6, decimal_places=3, null=True, blank=True)
 
     def __str__(self):
-        return f'{self.torneio}'
+        return f'{self.torneio_nome}'
 
