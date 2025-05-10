@@ -2,6 +2,22 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 
+class Funcoes(models.Model):
+    FUNCAO_CHOICES = (
+        ('atleta', 'Atleta'),
+        ('treinador', 'Treinador'),
+        ('direcao', 'Direção'),
+    )
+
+    nome = models.CharField(max_length=30, choices=FUNCAO_CHOICES, unique=True)
+
+    #APARECER O NOME NO ADMIN COMO DEVE SER
+    class Meta:
+        verbose_name_plural = 'Funções'
+
+    def __str__(self):
+        return self.get_nome_display()
+
 
 class Utilizadores(AbstractUser):
     CLASSE_CHOICES = (
@@ -19,6 +35,7 @@ class Utilizadores(AbstractUser):
     data_nascimento = models.DateField(null=False, blank=False)
     classe = models.CharField(max_length=50, choices=CLASSE_CHOICES, null=True, blank=True)
     foto_perfil = models.ImageField(upload_to='fotos_perfil/', default='fotos_perfil/default.png', null=True, blank=True)
+    funcao = models.ManyToManyField(Funcoes, blank=True)
 
 
     groups = models.ManyToManyField(
@@ -36,12 +53,17 @@ class Utilizadores(AbstractUser):
         related_query_name='utilizadores',
     )
 
+    #APARECER O NOME NO ADMIN COMO DEVE SER
+    class Meta:
+        verbose_name_plural = 'Utilizadores'
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
     def __str__(self):
         return self.username
     
+
 
 
 
@@ -69,8 +91,13 @@ class Treinos(models.Model):
     dia_da_semana = models.CharField(max_length=20, choices=DIAS_SEMANA_CHOICES)
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES, default='Treino')
 
+    #APARECER O NOME NO ADMIN COMO DEVE SER
+    class Meta:
+        verbose_name_plural = 'Treinos'
+        ordering = ['data_inicio']
+
     def __str__(self):
-        return f'{self.descricao}'
+        return f'{self.get_dia_da_semana_display()} - {self.hora_inicio} - {self.hora_fim}: {self.get_tipo_display()} | {self.data_inicio} |'
 
 
 class Reservas(models.Model):
@@ -78,9 +105,14 @@ class Reservas(models.Model):
     treino = models.ForeignKey(Treinos, on_delete=models.CASCADE)
     confirmado = models.BooleanField(default=False)
 
+    #APARECER O NOME NO ADMIN COMO DEVE SER
+    class Meta:
+        verbose_name_plural = 'Reservas'
+        ordering = ['treino']
+
 
     def __str__(self):
-        return f"{self.utilizador.username} - {self.treino.data_inicio}"
+        return f"{self.treino.get_tipo_display()}: {self.treino.get_dia_da_semana_display()} - {self.treino.data_inicio} | {self.utilizador.username}"
 
 
 
@@ -100,6 +132,11 @@ class GestaoCarrinha(models.Model):
     condutor = models.ForeignKey(Utilizadores, on_delete=models.CASCADE)
     quilometros_saida = models.DecimalField(max_digits=6, decimal_places=3)
     quilometros_chegada = models.DecimalField(max_digits=6, decimal_places=3, null=True, blank=True)
+    observacoes = models.TextField(null=True, blank=True)
+
+    #APARECER O NOME NO ADMIN COMO DEVE SER
+    class Meta:
+        verbose_name_plural = 'Gestão da Carrinha'
 
     def __str__(self):
         return f'{self.torneio_nome}'

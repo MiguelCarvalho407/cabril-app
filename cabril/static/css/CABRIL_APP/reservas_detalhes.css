@@ -115,6 +115,20 @@ h2 {
     object-fit: cover;
 }
 
+.btn-voltar-container{
+    margin-top: -3%;
+    text-align: center;
+}
+
+.btn-voltar{
+    text-decoration: none;
+    color: white;
+    background: #6c757d;
+    padding: 12px 24px;
+    border-radius: 8px;
+    justify-content: center;
+}
+
 
 
 @media (max-width: 768px) {

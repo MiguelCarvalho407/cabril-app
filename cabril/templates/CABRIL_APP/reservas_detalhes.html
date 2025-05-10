@@ -66,10 +66,14 @@
 </div>
 
 {% if request.user.is_staff %}
-    <div class="container-adicionar-atleta">
-        <a href="{% url 'adicionar_utilizador' training.id %}" class="btn-adicionar-atleta">Adicionar Atleta</a>
-    </div>
+<div class="container-adicionar-atleta">
+    <a href="{% url 'adicionar_utilizador' training.id %}" class="btn-adicionar-atleta">Adicionar Atleta</a>
+</div>
 {% endif %}
+
+<div class="btn-voltar-container">
+    <a href="{% url 'calendario_classe3' %}" class="btn-voltar">Voltar</a>
+</div>
 
 
 

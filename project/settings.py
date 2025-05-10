@@ -134,3 +134,12 @@ AUTH_USER_MODEL = 'cabril.Utilizadores'
 LOGIN_URL = '/'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+
+EMAIL_BACKEND = 'cabril.backends.email_backend.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_FROM = 'miguelcarvalho407@gmail.com'
+EMAIL_HOST_USER = 'miguelcarvalho407@gmail.com'
+EMAIL_HOST_PASSWORD = 'sbpwgluabsitloqr'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

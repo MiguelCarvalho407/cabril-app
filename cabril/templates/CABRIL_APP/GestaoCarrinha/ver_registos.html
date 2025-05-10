@@ -1,0 +1,35 @@
+{% extends 'CABRIL_APP/base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/CABRIL_APP/ver_registos.css' %}">
+
+<div class="table-responsive">
+    <h3 class="txt-principal">Gestão da Carrinha Registos</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Torneio</th>
+                <th>Data Saída</th>
+                <th>Data Chegada</th>
+                <!-- <th>Observações</th> -->
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for registo in registos %}
+            <tr>
+                <td data-label="Torneio">{{ registo.torneio_nome }}</td>
+                <td data-label="Data Saída">{{ registo.data_inicio }}</td>
+                <td data-label="Data Chegada">{{ registo.data_fim }}</td>
+                <td class="actions" data-label="Ações">
+                    <a href="{% url 'editar_gestao_carrinha' registo.id %}" class="action-btn edit-btn" title="Editar">✏️</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -42,6 +42,11 @@
             {{ form.data_nascimento }}
         </div>
 
+        <div class="form-content">
+            {{ form.funcao.label_tag }}
+            {{ form.funcao }}
+        </div>
+
         <div class="form-content-imagem">
             <input type="file" id="file-input" name="foto_perfil">
         </div>
@@ -50,6 +55,7 @@
             <button type="submit">Guardar alterações</button>
         </div>
 
+        <a href="{% url 'alterar_password' %}" class="btn-alterar-password">Alterar Password</a>
 
     </form>
 </div>

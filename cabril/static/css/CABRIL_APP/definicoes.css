@@ -1,3 +1,7 @@
+body{
+    overflow-x: hidden;
+}
+
 .profile-container {
     max-width: 600px;
     margin: 40px auto;
@@ -69,8 +73,9 @@
 
 .form-content button {
     background: #007bff;
+    font-size: 16px;
     color: #fff;
-    font-weight: bold;
+    padding: 12px;
     cursor: pointer;
 }
 
@@ -88,10 +93,22 @@
 }
 
 .form-content-imagem{
-    visibility: hidden; /* PARA NÃO APARECER A "Seleciona um Ficheiro" NA PARTE DE ESCOLHER A FOTO DE PERFIL */
+    visibility: hidden; /* PARA NÃO APARECER "Seleciona um Ficheiro" NA PARTE DE ESCOLHER A FOTO DE PERFIL */
 }
 
-/* Responsividade */
+.btn-alterar-password{
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    padding: 12px;
+    background: #6c757d;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+
 @media (max-width: 600px) {
     .profile-container {
         width: 90%;

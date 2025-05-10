@@ -6,6 +6,9 @@ from datetime import timedelta, datetime
 from .forms import *
 import json
 from django.contrib import messages
+from django.db.models import Q
+from django.conf import settings
+
 
 
 
@@ -60,6 +63,83 @@ def logout_view(request):
     return redirect('login')
 
 
+# ========== MUDAR PASSWORD ========== #
+
+from django.contrib.auth import update_session_auth_hash
+
+@login_required
+def alterar_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeFormPT(user=request.user, data=request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'A tua password foi alterada com sucesso!')
+            return redirect('definicoes')
+    else:
+        form = PasswordChangeFormPT(user=request.user)
+    
+    return render(request, 'CABRIL_APP/CABRIL_APP_CONTAS/alterar_password.html', {'form':form})
+
+
+# ========== RECUPERAR PASSWORD ========== #
+
+
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import send_mail
+
+def password_reset_request(request):
+    if request.method == "POST":
+        form = PasswordResetRequestForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            user = Utilizadores.objects.get(email=email)
+
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            token = default_token_generator.make_token(user)
+            
+            current_site = request.get_host()
+            reset_url = f"http://{current_site}/reset/{uid}/{token}/"
+
+            send_mail(
+                "CABRIL-Serpins - Recuperar Password",
+                f'Olá {user.username}\n\n'
+                f"Clica no seguinte link para definires uma nova password: {reset_url}",
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+
+            return redirect("login")
+    else:
+        form = PasswordResetRequestForm()
+
+    return render(request, 'CABRIL_APP/CABRIL_APP_CONTAS/password_reset_form.html', {'form': form})
+
+
+def password_reset_confirm(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = Utilizadores.objects.get(pk=uid)
+    except (Utilizadores.DoesNotExist, ValueError, TypeError):
+        user = None
+
+    if user and default_token_generator.check_token(user, token):
+        if request.method == "POST":
+            form = SetNewPasswordForm(request.POST)
+            if form.is_valid():
+                user.set_password(form.cleaned_data["new_password1"])
+                user.save()
+                return redirect('login')
+        else:
+            form = SetNewPasswordForm()
+        return render(request, "CABRIL_APP/CABRIL_APP_CONTAS/password_reset_confirm.html", {"form": form})
+    else:
+        return render(request, "CABRIL_APP/CABRIL_APP_CONTAS/password_reset_invalid.html")
+
+
 
 # ========== ======================== =========== #
 
@@ -83,8 +163,22 @@ def inicio(request):
 
 
 @login_required
-def calendario(request):
+def atletas(request):
+    query = request.GET.get('q', '')
+    if query:
+        membros = Utilizadores.objects.filter(Q(username__icontains=query))
+    else:
+        membros = Utilizadores.objects.all()
+    return render(request, 'CABRIL_APP/membros.html', {'membros': membros})
+
+
+
+@login_required
+def calendario_classe3(request):
     treinos = Treinos.objects.all()
+    
+    reservas_atleta = Reservas.objects.filter(utilizador=request.user).select_related('treino')
+    reservas_dict = {reserva.treino.id: reserva.confirmado for reserva in reservas_atleta}
 
     treinos_json = [
         {
@@ -95,12 +189,13 @@ def calendario(request):
             "tipo": treino.get_tipo_display(),
             "descricao": treino.descricao,
             "dia_da_semana": treino.get_dia_da_semana_display(),
-            "reservado": Reservas.objects.filter(utilizador=request.user, treino=treino).exists(),
+            "reservado": treino.id in reservas_dict,
+            "confirmado": reservas_dict.get(treino.id, False),
         }
         for treino in treinos
     ]
 
-    return render(request, 'CABRIL_APP/calendario.html', {'treinos_json': json.dumps(treinos_json)})
+    return render(request, 'CABRIL_APP/CALENDARIOS/classe3.html', {'treinos_json': json.dumps(treinos_json)})
 
 
 
@@ -114,7 +209,7 @@ def reservas(request, training_id):
 
     # VER SE O TREINO JÁ PASSOU
     if timezone.now() >= treino_datetime:
-        return redirect('calendario')
+        return redirect('calendario_classe3')
 
     # VER SE O UTILIZADOR JÁ TEM RESERVA
     reservation = Reservas.objects.filter(utilizador=request.user, treino=training).first()
@@ -126,7 +221,7 @@ def reservas(request, training_id):
     else:
         # SENÃO MARCA
         Reservas.objects.create(utilizador=request.user, treino=training)
-    return redirect('calendario')
+    return redirect('calendario_classe3')
 
 
 
@@ -203,7 +298,7 @@ def cancelar_evento(request, treino_id):
     if request.user.is_staff:
         treino.delete()
 
-    return redirect('calendario')
+    return redirect('calendario_classe3')
 
 
 
@@ -271,11 +366,15 @@ def criarevento(request):
 
                 current_date += timedelta(days=1)
 
-            return redirect('calendario')
+            return redirect('calendario_classe3')
     else:
         form = CriarTreinoForm()
 
     return render(request, 'CABRIL_APP/CriarEventosCRUD/criar.html', {'form': form})
+
+
+
+# ========== GESTÃO DA CARRINHA ========== #
 
 
 
@@ -286,8 +385,31 @@ def gestaocarrinha(request):
         form = GestaoCarrinhaForm(request.POST or None)
         if form.is_valid():
             form.save()
-            return redirect('inicio')
+            return redirect('ver_registos')
     else:
         form = GestaoCarrinhaForm()
 
     return render(request, 'CABRIL_APP/GestaoCarrinha/preencher.html', {'form':form})
+
+
+@login_required
+def editar_gestao_carrinha(request, carrinha_id):
+    carrinha = get_object_or_404(GestaoCarrinha, id=carrinha_id)
+
+    if request.method == 'POST':
+        form = GestaoCarrinhaForm(request.POST, instance=carrinha)
+        if form.is_valid():
+            form.save()
+            return redirect('ver_registos')
+    else:
+        form = GestaoCarrinhaForm(instance=carrinha)
+
+    return render(request, 'CABRIL_APP/GestaoCarrinha/editar.html', {'form': form})
+
+
+
+@login_required
+def ver_registos(request):
+    registos = GestaoCarrinha.objects.all()
+    return render(request, 'CABRIL_APP/GestaoCarrinha/ver_registos.html', {'registos': registos})
+

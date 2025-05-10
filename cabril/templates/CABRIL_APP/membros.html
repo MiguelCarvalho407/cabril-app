@@ -1,0 +1,51 @@
+{% extends 'CABRIL_APP/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/CABRIL_APP/membros.css' %}">
+
+<div class="membros-container">
+    <h1>Atletas</h1>
+    <!-- <form method="GET" class="search-form">
+        <input type="text" name="q" placeholder="Pesquisar por nome..." value="{{ request.GET.q }}">
+        <button type="submit">Pesquisar</button>
+    </form> -->
+    
+    <div class="table-responsive">
+        <table class="membros-table">
+            
+            <thead>
+                <tr>
+                    <th>Foto</th>
+                    <th>Nome</th>
+                    <th>Função</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for membros in membros %}
+                <tr>
+                    <td>
+                        {% if membros.foto_perfil %}
+                            <img src="{{ membros.foto_perfil.url }}" class="foto-perfil">
+                        {% else %}
+                            <img src="{% static 'media/fotos_perfil/default.png' %}" alt="">
+                        {% endif %}
+                    </td>
+                    <td>{{ membros.username }}</td>
+                    <td>
+                        {% for funcao in membros.funcao.all %}
+                            {{ funcao }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            Por definir
+                        {% endfor %}
+                    </td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

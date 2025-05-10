@@ -18,14 +18,21 @@
 
         <div class="hamburguer">
             <div class="line"></div>
-            <div class="line"></div>
+            <div class="line"></div>    
             <div class="line"></div>
         </div>
 
         <nav class="nav-bar">
             <ul>
-                <li><a href="{% url 'calendario' %}">Calendário</a></li>
-                <li><a href="{% url 'gestaocarrinha' %}">Gestão Carrinha</a></li>
+                <li><a href="{% url 'calendario_classe3' %}">Calendário</a></li>
+                <li class="dropdown" id="gestaoDropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle">Gestão Carrinha</a>
+                    <ul class="dropdown-content">
+                        <li><a href="{% url 'gestaocarrinha' %}">Criar Registo</a></li>
+                        <li><a href="{% url 'ver_registos' %}">Ver Registos</a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url 'atletas' %}">Atletas</a></li>
                 <li><a href="{% url 'definicoes' %}">Definições</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
             </ul>
@@ -44,6 +51,21 @@
             navBar = document.querySelector(".nav-bar");
             navBar.classList.toggle("active")
         }
+
+
+        const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const dropdown = document.getElementById('gestaoDropdown');
+
+    dropdownToggle.addEventListener('click', function (e) {
+        e.stopPropagation(); // impede propagação do clique
+        dropdown.classList.toggle('show');
+    });
+
+    // Fecha o dropdown se clicares fora
+    window.addEventListener('click', function () {
+        dropdown.classList.remove('show');
+    });
+    
     </script>
 
 </body>

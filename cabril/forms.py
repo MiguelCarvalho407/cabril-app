@@ -2,6 +2,7 @@ from django.forms import ModelForm
 from .models import *
 from django import forms
 import dns.resolver
+from django.contrib.auth.forms import PasswordChangeForm
 
 
 class CriarContaForm(forms.Form):
@@ -70,7 +71,7 @@ class CriarContaForm(forms.Form):
         if confirmar_password != password:
             self.add_error('confirmar_password', 'As passwords não correspondem')
 
-        if chave != '123':
+        if chave != 'Cabril-Serpins_2025!':
             self.add_error('chave', 'Chave Incorreta.')
 
         return cleaned_data
@@ -88,6 +89,55 @@ class LoginForm(forms.Form):
     }))
 
 
+
+# ========== ALTERAR PASSWORD ========== #
+
+
+
+class PasswordChangeFormPT(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['old_password'].label = 'Password atual'
+        self.fields['new_password1'].label = 'Nova password'
+        self.fields['new_password2'].label = 'Confirmar password'
+
+        self.fields['new_password1'].help_text = ('A tua password deve conter pelo menos 8 caracteres.<br>'
+                                                  'A tua password não pode ser muito comum.<br>'
+                                                  'A tua password não pode ser apenas numérica<br>')
+        self.fields['new_password2'].help_text = 'Introduz a password como acima, para verificação.'
+
+
+
+# ========== RECUPERAR PASSWORD ==========#
+
+
+
+class PasswordResetRequestForm(forms.Form):
+    email = forms.EmailField(label='', widget=forms.EmailInput(attrs={
+        'class':'form-control',
+        'placeholder':'Insere o teu email para receberes as intruções'
+    }))
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if not Utilizadores.objects.filter(email=email).exists():
+            raise forms.ValidationError("E-mail não encontrado.")
+        return email
+
+
+class SetNewPasswordForm(forms.Form):
+    new_password1 = forms.CharField(label="Nova password", widget=forms.PasswordInput)
+    new_password2 = forms.CharField(label="Confirmar password", widget=forms.PasswordInput)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("new_password1")
+        password2 = cleaned_data.get("new_password2")
+
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords não coincidem.")
+        return cleaned_data
 
 # ========== CriarEventosCRUD ========== #
 
@@ -241,9 +291,7 @@ class GestaoCarrinhaForm(forms.ModelForm):
             'placeholder': 'Ocupante 8'
         })
     )
-    
-    
-    
+   
     quilometros_saida = forms.DecimalField(
         required=True, 
         widget=forms.NumberInput(attrs={
@@ -256,8 +304,14 @@ class GestaoCarrinhaForm(forms.ModelForm):
             'class': 'form-control', 'placeholder': 'Quilómetros à Chegada'
         })
     )
+    observacoes = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'class': 'form-control', 'placeholder': 'Observações'
+        })
+    )
 
     class Meta:
         model = GestaoCarrinha
         fields = ['data_inicio', 'data_fim', 'torneio_nome', 'ocupante1', 'ocupante2', 'ocupante3', 'ocupante4', 'ocupante5',
-                  'ocupante6', 'ocupante7', 'ocupante8', 'condutor', 'quilometros_saida', 'quilometros_chegada']    
+                  'ocupante6', 'ocupante7', 'ocupante8', 'condutor', 'quilometros_saida', 'quilometros_chegada', 'observacoes']    
