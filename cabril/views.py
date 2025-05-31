@@ -8,7 +8,7 @@ import json
 from django.contrib import messages
 from django.db.models import Q
 from django.conf import settings
-
+from django.core.paginator import Paginator
 
 
 
@@ -165,17 +165,27 @@ def inicio(request):
 @login_required
 def atletas(request):
     query = request.GET.get('q', '')
+
     if query:
-        membros = Utilizadores.objects.filter(Q(username__icontains=query))
+        membros_list = Utilizadores.objects.filter(Q(username__icontains=query))
     else:
-        membros = Utilizadores.objects.all()
+        membros_list = Utilizadores.objects.all()
+
+
+    paginator = Paginator(membros_list, 10)
+    page_number = request.GET.get('page')
+    membros = paginator.get_page(page_number)
+
     return render(request, 'CABRIL_APP/membros.html', {'membros': membros})
 
 
 
 @login_required
 def calendario_classe3(request):
-    treinos = Treinos.objects.all()
+    if request.user.funcao.filter(nome='treinador').exists() or request.user.is_staff:
+        treinos = Treinos.objects.all()
+    else:
+        treinos = Treinos.objects.filter(classe=request.user.classe)
     
     reservas_atleta = Reservas.objects.filter(utilizador=request.user).select_related('treino')
     reservas_dict = {reserva.treino.id: reserva.confirmado for reserva in reservas_atleta}
@@ -229,6 +239,7 @@ def reservas(request, training_id):
 def reservas_detalhes(request, training_id):
     training = get_object_or_404(Treinos, id=training_id)
     reservations = Reservas.objects.filter(treino=training)
+    is_treinador = request.user.funcao.filter(nome='treinador').exists() # PARA A FUNCAO treinador CONSEGUIR ADICIONAR PESSOAS AO TREINO
 
     if request.method == 'POST':
         reservation_id = request.POST.get('reservation_id')
@@ -240,13 +251,13 @@ def reservas_detalhes(request, training_id):
 
         return redirect('reservas_detalhes', training_id=training.id)
 
-    return render(request, 'CABRIL_APP/reservas_detalhes.html', {'training': training, 'reservations': reservations})
+    return render(request, 'CABRIL_APP/reservas_detalhes.html', {'training': training, 'reservations': reservations, 'is_treinador': is_treinador})
 
 
 
 @login_required
 def remover_presenca(request, treino_id, user_id):
-    if not request.user.is_staff:
+    if not (request.user.is_staff or request.user.funcao.filter(nome='treinador').exists()):
         return render(request, 'CABRIL_APP/ERRORS/403.html')
     
     treino = get_object_or_404(Treinos, id=treino_id)
@@ -261,7 +272,7 @@ def remover_presenca(request, treino_id, user_id):
 
 @login_required
 def adicionar_utilizador(request, treino_id):
-    if not request.user.is_staff:
+    if not (request.user.is_staff or request.user.funcao.filter(nome='treinador').exists()):
         return render(request, 'CABRIL_APP/ERRORS/403.html')
     
     treino = get_object_or_404(Treinos, id=treino_id)
@@ -337,6 +348,7 @@ def criarevento(request):
             dias_da_semana = form.cleaned_data['dia_da_semana']
             tipo = form.cleaned_data['tipo']
             descricao = form.cleaned_data['descricao']
+            classe = form.cleaned_data['classe']
         
             dia_semana_map = {
                 'segunda-feira': 0,
@@ -362,6 +374,7 @@ def criarevento(request):
                                 dia_da_semana=dia_da_semana ,
                                 tipo = tipo,
                                 descricao=descricao,
+                                classe=classe,
                             )
 
                 current_date += timedelta(days=1)

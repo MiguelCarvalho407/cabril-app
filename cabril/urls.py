@@ -25,9 +25,7 @@ urlpatterns = [
 
     path('inicio/', views.inicio, name='inicio'),
     path('atletas/', views.atletas, name='atletas'),
-    path('calendario/classe3/', views.calendario_classe3, name='calendario_classe3'),
-    # path('calendario/classe2/', views.calendario, name='calendario'),
-    # path('calendario/classe3/', views.calendario, name='calendario'),
+    path('calendario/', views.calendario_classe3, name='calendario_classe3'),
     path('definicoes/', views.definicoes, name='definicoes'),
 
     path('treinodetalhes/<int:training_id>/', views.reservas_detalhes, name='reservas_detalhes'),

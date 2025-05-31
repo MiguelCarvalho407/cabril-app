@@ -58,6 +58,39 @@ body{
     color: #888;
 }
 
+.pagination {
+    text-align: center;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+
+.page-numbers {
+    list-style: none;
+    padding: 0;
+    display: inline-flex;
+    gap: 5px;
+}
+
+.page-numbers li {
+    display: inline;
+}
+
+.page-numbers a, .page-numbers span {
+    padding: 8px 12px;
+    background: #eee;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+}
+
+.page-numbers .active span {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+
+
 
 @media screen and (max-width: 768px) {
     .membros-table {
@@ -100,8 +133,11 @@ body{
     /* Adicionando data-labels para células */
     .membros-table td:nth-child(1)::before { content: "Foto"; }
     .membros-table td:nth-child(2)::before { content: "Nome"; }
-    .membros-table td:nth-child(3)::before { content: "Email"; }
-    .membros-table td:nth-child(4)::before { content: "Função"; }
+    .membros-table td:nth-child(3)::before { content: "Classe"; }
+
+    .pagination {
+        margin-bottom: 5%;
+    }
 }
 
 @media screen and (max-width: 480px) {

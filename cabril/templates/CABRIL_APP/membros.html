@@ -19,7 +19,7 @@
                 <tr>
                     <th>Foto</th>
                     <th>Nome</th>
-                    <th>Função</th>
+                    <th>Classe</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,11 +34,11 @@
                     </td>
                     <td>{{ membros.username }}</td>
                     <td>
-                        {% for funcao in membros.funcao.all %}
-                            {{ funcao }}{% if not forloop.last %}, {% endif %}
-                        {% empty %}
+                        {% if membros.classe %}
+                            {{ membros.get_classe_display }}
+                        {% else %}
                             Por definir
-                        {% endfor %}
+                        {% endif %}
                     </td>
                     
                 </tr>
@@ -47,5 +47,27 @@
         </table>
     </div>
 </div>
+
+
+<div class="pagination">
+    <ul class="page-numbers">
+        {% if membros.has_previous %}
+            <li><a href="?page=1{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&laquo;</a></li>
+        {% endif %}
+
+        {% for num in membros.paginator.page_range %}
+            {% if membros.number == num %}
+                <li class="active"><span>{{ num }}</span></li>
+            {% elif num > membros.number|add:'-3' and num < membros.number|add:'3' %}
+                <li><a href="?page={{ num }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if membros.has_next %}
+            <li><a href="?page={{ membros.paginator.num_pages }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">&raquo;</a></li>
+        {% endif %}
+    </ul>
+</div>
+
 
 {% endblock %}

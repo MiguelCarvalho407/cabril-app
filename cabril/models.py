@@ -7,6 +7,7 @@ class Funcoes(models.Model):
         ('atleta', 'Atleta'),
         ('treinador', 'Treinador'),
         ('direcao', 'Direção'),
+        ('arbitro', 'Árbitro'),
     )
 
     nome = models.CharField(max_length=30, choices=FUNCAO_CHOICES, unique=True)
@@ -83,6 +84,8 @@ class Treinos(models.Model):
         ('torneio', 'Torneio'),
     ]
 
+    CLASSE_CHOICES = Utilizadores.CLASSE_CHOICES
+
     descricao = models.CharField(max_length=255, null=True, blank=True, default='None')
     data_inicio = models.DateField()
     data_fim = models.DateField()
@@ -90,6 +93,7 @@ class Treinos(models.Model):
     hora_fim = models.TimeField()
     dia_da_semana = models.CharField(max_length=20, choices=DIAS_SEMANA_CHOICES)
     tipo = models.CharField(max_length=10, choices=TIPO_CHOICES, default='Treino')
+    classe = models.CharField(max_length=50, choices=CLASSE_CHOICES, null=True, blank=True)
 
     #APARECER O NOME NO ADMIN COMO DEVE SER
     class Meta:

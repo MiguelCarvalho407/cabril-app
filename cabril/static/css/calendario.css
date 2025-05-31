@@ -187,6 +187,10 @@ body {
   background-color: #28a745;
 }
 
+.treino-reservado{
+  background-color: rgba(224, 224, 76, 0.719);
+}
+
 #reserve-link{
   display: inline-block;
   padding: 7px;

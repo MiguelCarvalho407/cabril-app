@@ -108,6 +108,11 @@ body{
     text-decoration: none;
 }
 
+.profile-container .p-mudar-foto{
+    color: #fc9696;
+    font-size: 12px;
+}
+
 
 @media (max-width: 600px) {
     .profile-container {

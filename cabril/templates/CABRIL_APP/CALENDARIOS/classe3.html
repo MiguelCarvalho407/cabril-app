@@ -97,6 +97,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     // QUANDO METE PRESENÇA NO TREINO MUDA A COR DE FUNDO
                     if (treino.confirmado) {
                         treinoDiv.classList.add("treino-presente")
+                    } else if (treino.reservado){
+                        treinoDiv.classList.add("treino-reservado")
                     }
                     // ---------------------------------------------- //
 

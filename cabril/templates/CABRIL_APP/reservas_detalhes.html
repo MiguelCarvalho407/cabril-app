@@ -18,7 +18,7 @@
                         <th>Foto</th>
                         <th>Nome</th>
                         <th class="presente-desaparecer">Presente</th>
-                        {% if request.user.is_staff %}
+                        {% if request.user.is_staff or is_treinador %}
                             <th></th>
                         {% endif %}
                     </tr>
@@ -40,7 +40,7 @@
                             </td>
                             
 
-                            {% if request.user.is_staff %}
+                            {% if request.user.is_staff or is_treinador %}
                             <td class="align-middle">
                                 <form method="POST" class="d-inline">
                                     {% csrf_token %}
@@ -65,16 +65,11 @@
 
 </div>
 
-{% if request.user.is_staff %}
-<div class="container-adicionar-atleta">
-    <a href="{% url 'adicionar_utilizador' training.id %}" class="btn-adicionar-atleta">Adicionar Atleta</a>
-</div>
+{% if request.user.is_staff or is_treinador %}
+    <div class="container-adicionar-atleta">
+        <a href="{% url 'adicionar_utilizador' training.id %}" class="btn-adicionar-atleta">Adicionar Atleta</a>
+    </div>
 {% endif %}
-
-<div class="btn-voltar-container">
-    <a href="{% url 'calendario_classe3' %}" class="btn-voltar">Voltar</a>
-</div>
-
 
 
 {% endblock %}

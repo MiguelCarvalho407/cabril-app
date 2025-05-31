@@ -163,6 +163,12 @@ class CriarTreinoForm(forms.Form):
         widget=forms.Select()
     )
 
+    classe = forms.ChoiceField(
+        choices=Utilizadores.CLASSE_CHOICES,
+        widget=forms.Select(),
+        label='Teste'
+    )
+
 
 class ReservasForm(forms.ModelForm):
     class Meta:
