@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'cabril',
+    'pwa',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +71,36 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
+
+
+# CONFIGURAÇÃO DO PWA
+
+PWA_APP_NAME = 'CABRIL-Serpins'
+PWA_APP_DESCRIPTION = "Minha aplicação Django como PWA"
+PWA_APP_THEME_COLOR = '#000000'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'portrait'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/icons/icon-192x192.png',
+        'sizes': '192x192'
+    },
+    {
+        'src': '/static/icons/icon-512x512.png',
+        'sizes': '512x512'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        "src": "/static/icons/icon-192x192.png",
+        "sizes": "192x192"
+    }
+]
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'cabril', 'static/js', 'serviceworker.js')
 
 
 # Database

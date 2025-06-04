@@ -3,15 +3,20 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>CABRIL - Login</title>
-  <link rel="stylesheet" href="{% static 'css/login.css' %}">
-  <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
-  <link rel="stylesheet" href="{% static 'imagens/cabril_favicon.png' %}">
-  <link rel="shortcut icon" href="{% static 'imagens/cabril_favicon.png' %}" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CABRIL - Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link href='https://fonts.googleapis.com/css?family=Poppins' rel='stylesheet'>
+    <link rel="stylesheet" href="{% static 'imagens/cabril_favicon.png' %}">
+    <link rel="shortcut icon" href="{% static 'imagens/cabril_favicon.png' %}" type="image/x-icon">
 
+    {% load pwa %}
+    {% progressive_web_app_meta %}
+
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#4CAF50">
 </head>
 <body>
     
@@ -43,12 +48,57 @@
                     <a href="{% url 'signup' %}">Criar Conta</a>
                     <br>
                     <a href="{% url 'password_reset' %}">Recuperar Password</a>
+                    <button id="install-button" style="display: none;">📲 "Instalar" Aplicação</button>
                 </span>
             </div>
 
         </div>
 
     </div>
+
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register("{% static 'serviceworker.js' %}")
+                .then(reg => console.log('Service worker registrado com sucesso:', reg))
+                .catch(err => console.log('Erro ao registrar service worker:', err));
+        });
+    }
+
+    let deferredPrompt;
+    const installButton = document.getElementById('install-button');
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installButton.style.display = 'inline-block';
+    });
+
+    installButton.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('O utilizador aceitou instalar o app.');
+          } else {
+            console.log('O utilizador recusou instalar o app.');
+          }
+          deferredPrompt = null;
+          installButton.style.display = 'none';
+        });
+      }
+    });
+
+    // 🔔 Notificação local (só funciona se o site estiver aberto)
+    Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        new Notification("Título", {
+          body: "Isto é uma notificação local!",
+          icon: "/static/imagens/cabril_favicon.png"
+        });
+      }
+    });
+</script>
 
 </body>
 </html>

@@ -54,17 +54,17 @@
 
 
         const dropdownToggle = document.querySelector('.dropdown-toggle');
-    const dropdown = document.getElementById('gestaoDropdown');
+        const dropdown = document.getElementById('gestaoDropdown');
 
-    dropdownToggle.addEventListener('click', function (e) {
-        e.stopPropagation(); // impede propagação do clique
-        dropdown.classList.toggle('show');
-    });
+        dropdownToggle.addEventListener('click', function (e) {
+            e.stopPropagation(); // impede propagação do clique
+            dropdown.classList.toggle('show');
+        });
 
-    // Fecha o dropdown se clicares fora
-    window.addEventListener('click', function () {
-        dropdown.classList.remove('show');
-    });
+        // Fecha o dropdown se clicares fora
+        window.addEventListener('click', function () {
+            dropdown.classList.remove('show');
+        });
     
     </script>
 

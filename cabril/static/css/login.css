@@ -121,13 +121,24 @@ body{
     margin-bottom: 5%;
 }
 
+#install-button {
+    margin-top: 2%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 10px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
 
 @media only screen and (max-width: 768px) {
-.container{
-    width: 90%;
-}
-
-#responsivo-criar-conta{
-    margin-top: 200px;
-}
+    .container{
+        width: 90%;
+    }
+    
+    #responsivo-criar-conta{
+        margin-top: 200px;
+    }
 }
